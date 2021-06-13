@@ -1,31 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-// contract VeritTraceRecords {
-    
-//     struct Record {
-//         string signature;
-//         string inputMessage;
-//         string timeStamp;
-//         string platformIdentifier;
-//         string platformSignature;
-//         string platformMetadata;
-//     }
-
-//     mapping (string => Record) records;
-    
-//     address private owner;
-    
-//     modifier isOwner() {
-//         require(msg.sender == owner, "Caller is not owner");
-//         _;
-//     }
-    
-//     constructor() public {
-//         owner = tx.origin;
-//     }
-// }
-
 contract VeritIdentityTable {
     
     // Structure for storing the attestations
@@ -49,6 +24,7 @@ contract VeritIdentityTable {
     
     event Register(string userType, address _address, bytes signature);
     event Attest(address _address, Attestation attestation);
+    event ErrorLog(string reason);
     
     modifier isOwner() { // modifier (might come in handy later)
         
@@ -60,18 +36,13 @@ contract VeritIdentityTable {
         
         owner = 0xA71A9AEe3b0d8027e7A654aA7ddf8a3D882C64F5; // hardcoded temporary public key
     }
-    
+  
     // Internal functions for sign verification using ecrecover and keccak256.
     // To get the correct sign in web3, follow the instructions as in the bottom of the contract
+    
     function getEthSignedMessageHash(bytes32 _messageHash) pure internal returns (bytes32) {
 
         return keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", _messageHash));
-    }
-
-    function verifySign ( address _signer, bytes32 messageHash , bytes memory signature) pure internal returns (bool) {
-        
-        bytes32 ethSignedMessageHash = getEthSignedMessageHash(messageHash);
-        return recoverSigner(ethSignedMessageHash, signature) == _signer;
     }
 
     function recoverSigner(bytes32 _ethSignedMessageHash, bytes memory _signature) pure internal returns (address) {
@@ -95,34 +66,64 @@ contract VeritIdentityTable {
         // implicitly return (r, s, v)
     }
     
-    // Add an address to the mapping
-    function registerAddress (string memory userType, address _address, Attestation[] memory attestations, bytes memory signature) public returns (bool added) {
+    function verifySign ( address _signer, bytes32 messageHash , bytes memory signature) public pure returns (bool) {
         
+        bytes32 ethSignedMessageHash = getEthSignedMessageHash(messageHash);
+        return recoverSigner(ethSignedMessageHash, signature) == _signer;
+    }
+    
+    function getUserAddress (address senderAddress) public view returns (address userAddress) {
+        
+        return users[senderAddress].userAddress;
+    }
+    
+    function getPlatformHandleHash (address senderAddress, string memory platformIdentifier) public view returns (bytes32 platformHandleHash) {
+        
+        return keccak256(abi.encodePacked(users[senderAddress].attestations[platformIdentifier].platformHandle));
+    }
+    
+    
+    // Add an address to the mapping
+    // The address is taken from msg.sender
+    function registerAddress (string memory userType, Attestation[] memory attestations, bytes memory signature) public returns (bool added) {
+        
+        address _address = msg.sender;
         bytes32 messageHash = keccak256(abi.encodePacked("Verit Platform Registration\n", _address)); // Hash used for sign
         bool verify = verifySign(owner, messageHash, signature); // verify signature
-        if(!verify) return verify;
+        if(!verify) {
+            emit ErrorLog("Signature verification failed");
+            return false;
+        }
 
         User storage user = users[_address];
         
-        if(user.userAddress == _address) // If address already has a mapping, then it can not be directly modified, only attestations can be added
+        if(user.userAddress == _address){ // If address already has a mapping, then it can not be directly modified, only attestations can be added
+            emit ErrorLog("This address has already been mapped to");
             return false;
-            
+        }
+        
         user.userType = userType;
         user.userAddress = _address;
         
         // add Attestations to the address
         for(uint i = 0; i < attestations.length; ++i) {
-            addAttestation(_address, attestations[i]);
+            addAttestation(attestations[i]);
         }
         
         emit Register(userType, _address, signature);
         return verify;
     }
     
-    // function to add attestations to a given address. Can be called from regisetAddress and also on it own
-    function addAttestation (address _address, Attestation memory attestation) public returns (bool attested) {
+    // function to add attestations to a given address. Can be called from regiserAddress and also on it own
+    // the address is taken from msg.sender
+    function addAttestation (Attestation memory attestation) public returns (bool attested) {
     
-        require(users[_address].userAddress == _address, "address not present"); // Returns an error if the address does not have a mapping already.
+        address _address = msg.sender;
+        if(users[_address].userAddress != _address) {
+            emit ErrorLog("Address not registered");
+            return false;
+        } // Allow only registered addresses to add Attestations.
+            
         
         bytes32 messageHash = keccak256(abi.encodePacked("Verit Platform Attestation\n", attestation.platformHandle, "\n", _address)); // Hash used for sign
         bool verify = verifySign(owner, messageHash, attestation.signature); // verify signature
@@ -131,6 +132,8 @@ contract VeritIdentityTable {
             users[_address].attestations[attestation.platformIdentifier] = attestation;
             emit Attest(_address, attestation);
         }
+        else
+            emit ErrorLog("Incorrect attestation signature");
         return verify;
     }
 }
@@ -141,7 +144,7 @@ web3.utils.keccak256(web3.utils.encodePacked(inputs))
 Payload:
 web3.eth.accounts.sign(messageHash, privateKey)
 web3.eth.accounts.sign(web3.utils.keccak256(web3.utils.encodePacked(<input>), privKey)
-privKey for owner: 
+privateKey for owner: 
 0xbcfbe70f344d492288500c017f0530a8ecd78766ad71d099e37e30ebc45242e2
 
 for register: 
@@ -156,15 +159,19 @@ web3.eth.accounts.sign(web3.utils.keccak256(web3.utils.encodePacked("Verit Platf
 
 
 
-address2=
+address2= 
 0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2
-sign=
+privKey = 
+7e5bfb82febc4c2c8529167104271ceec190eafdca277314912eaabdb67c6e5f
+
+sign for record=
 0xb8cc4a3285ebb98d7033f1ad1300cd682f72bbae48733e201ddb6080137ad89766e613940708c467a8e472ebb6f390c8a95d35d97fec7403f26235cc4b39aef71c
+userType = 
+"user"
 attestation = 
 [
 ["Twitter", "twitter.com", "0xc16c84364652f7b0e0b17ec3319b46110aae44865702ad3a7c85486f4b64ce3a6966a1bfe1bb41239ee151502b7281b0b82397b98d2cf28a76ecb0a1bcc57f141c", "atharv"]
 ]
 to get attestation sign use
-web3.eth.accounts.sign(web3.utils.keccak256(web3.utils.encodePacked("Verit Platform Attestation\n", platformHandle + "\n", _address), privKey)
-
+web3.eth.accounts.sign(web3.utils.keccak256(web3.utils.encodePacked("Verit Platform Attestation\n", platformHandle + "\n", _address)), privKey)
 */
