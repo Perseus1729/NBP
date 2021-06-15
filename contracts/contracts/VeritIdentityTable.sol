@@ -22,9 +22,9 @@ contract VeritIdentityTable {
     
     address private owner; // Currently is hardcoded to store an address representing Twitter's Blockchain address
     
-    event Register(string userType, address _address, bytes signature);
-    event Attest(address _address, Attestation attestation);
-    event ErrorLog(string reason);
+    event Register(address indexed _address, string userType);
+    event Attest(address indexed _address, string platformIdentifier, string platformHandle);
+    // event ErrorLog(string reason);
     
     modifier isOwner() { // modifier (might come in handy later)
         
@@ -91,14 +91,14 @@ contract VeritIdentityTable {
         bytes32 messageHash = keccak256(abi.encodePacked("Verit Platform Registration\n", _address)); // Hash used for sign
         bool verify = verifySign(owner, messageHash, signature); // verify signature
         if(!verify) {
-            emit ErrorLog("Signature verification failed");
+            // emit ErrorLog("Signature verification failed");
             return false;
         }
 
         User storage user = users[_address];
         
         if(user.userAddress == _address){ // If address already has a mapping, then it can not be directly modified, only attestations can be added
-            emit ErrorLog("This address has already been mapped to");
+            // emit ErrorLog("This address has already been mapped to");
             return false;
         }
         
@@ -110,7 +110,7 @@ contract VeritIdentityTable {
             addAttestation(attestations[i]);
         }
         
-        emit Register(userType, _address, signature);
+        emit Register(_address, userType);
         return verify;
     }
     
@@ -120,7 +120,7 @@ contract VeritIdentityTable {
     
         address _address = msg.sender;
         if(users[_address].userAddress != _address) {
-            emit ErrorLog("Address not registered");
+            // emit ErrorLog("Address not registered");
             return false;
         } // Allow only registered addresses to add Attestations.
             
@@ -130,10 +130,10 @@ contract VeritIdentityTable {
         if(verify)
         {
             users[_address].attestations[attestation.platformIdentifier] = attestation;
-            emit Attest(_address, attestation);
+            emit Attest(_address, attestation.platformIdentifier, attestation.platformHandle);
         }
-        else
-            emit ErrorLog("Incorrect attestation signature");
+        // else
+            // emit ErrorLog("Incorrect attestation signature");
         return verify;
     }
 }
@@ -155,9 +155,7 @@ address =
 sign = 
 0x0f776f643953603649fd845e2b81066e5efbcb7c42d87634deb3f4d503a871406713e9cdc0efdef8f27097c593e1d774578f3df34f9848fa0abdcd62209c3d331c
 to get sign, use:
-web3.eth.accounts.sign(web3.utils.keccak256(web3.utils.encodePacked("Verit Platform Registration\n", _address), privKey)
-
-
+web3.eth.accounts.sign(web3.utils.keccak256(web3.utils.encodePacked("Verit Platform Registration\n", _address)), privKey)
 
 address2= 
 0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2

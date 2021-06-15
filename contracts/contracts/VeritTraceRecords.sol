@@ -20,8 +20,8 @@ contract VeritTraceRecords {
     // Identity table
     VeritIdentityTable veritIdentityTable;
     
-    event RecordAdded(Record record);
-    event ErrorLog(string reason);
+    event RecordAdded(address indexed userAddress, bytes32 message);
+    // event ErrorLog(string reason);
     
     // maps from Hash(dataIndexHash + platformIdentifier) => Record
     mapping (bytes32 => Record) records;
@@ -36,12 +36,12 @@ contract VeritTraceRecords {
     function addRecord (Record memory record) public returns (bool added) {
         
         if(msg.sender != veritIdentityTable.getUserAddress(msg.sender)) {
-            emit ErrorLog("Message Sender not a registered address");
+            // emit ErrorLog("Message Sender not a registered address");
             return false;
         }
         
         if (keccak256(abi.encodePacked(record.platformHandle)) != veritIdentityTable.getPlatformHandleHash(msg.sender, record.platformIdentifier)) {
-            emit ErrorLog("Platform Handle not attested");
+            // emit ErrorLog("Platform Handle not attested");
             return false;
         }
         
@@ -50,13 +50,13 @@ contract VeritTraceRecords {
         
         if(!verify) {
             // emit ErrorLog(abi.encodePacked("Verit Trace Records\n", record.platformIdentifier, "\n", record.inputMessage, record.dataIndexHash, record.timeStamp));
-            emit ErrorLog("Signature not verified");
+            // emit ErrorLog("Signature not verified");
             return false;
         }
         
         bytes32 index = keccak256(abi.encodePacked(record.dataIndexHash, record.platformIdentifier));
         records[index] = record;
-        emit RecordAdded(record);
+        emit RecordAdded(msg.sender, record.inputMessage);
         return true;
     }
     
@@ -82,7 +82,12 @@ bytes32 dataIndexHash;
 bytes signature;
 0xd0f894d264e782274071aa79663660153570ee9bca0192010aa573879ad092cf6f67d39c816ce923273643e5be1815c880aca00621c15709ea260e649c319a161c
 use:
-web3.eth.accounts.sign(web3.utils.soliditySha3(web3.utils.encodePacked("Verit Trace Records\n", platformIdentifier + "\n", inputMessage, dataIndexHash, timeStamp)), privKey)
+web3.eth.sign(web3.utils.keccak256(web3.utils.encodePacked("Verit Trace Records\n", platformIdentifier + "\n", inputMessage, dataIndexHash, timeStamp)), publicKey)
+SAFER METHOD: if the account is unlocked (Registered to truffle / metamask, for matic blockchain)
+where accounts[0] is the public key of the unlocked account.
+
+Use this method to sign in any applications, using private Key is NOT safe.
+
 
 string platformHandle;
 "atharv"
