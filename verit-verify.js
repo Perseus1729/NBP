@@ -12,8 +12,8 @@ const init = async () =>{
 //        }
 //        }
 //    )
-    const VeritTraceRecords = require('./ssi-verit/contracts/build/contracts/VeritTraceRecords.json');
-    const VeritIdentityTable = require('./ssi-verit/contracts/build/contracts/VeritIdentityTable.json');
+    const VeritTraceRecords = require('./contracts/build/contracts/VeritTraceRecords.json');
+    const VeritIdentityTable = require('./contracts/build/contracts/VeritIdentityTable.json');
     const maticweb3 = new Web3(new Web3.providers.HttpProvider('https://rpc-mumbai.maticvigil.com'));
     console.log(maticweb3);
     const id= await maticweb3.eth.net.getId();
