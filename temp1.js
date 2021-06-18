@@ -1,0 +1,1 @@
+Tarp.require({main: "./verit-verify.js"});

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .my {
+            background-color: grey;
+            width: 300px;
+            height: 400px;
+            justify-content: center;
+            align-content: center;
+        }
+        h1 {
+            width: 100%;
+            height: 20%;
+            color: rgb(102, 236, 75);
+            text-align: center;
+            margin-bottom: -5%;
+        }
+        button{
+            color: rgb(8, 8, 8);
+            width: 50%;
+            height: 20%;
+            align-items: center;
+            background-color: rgb(21, 185, 235);
+            margin-top: 5%;
+            margin-left: 25%;
+        }
+    </style>
+    <script src="./libraries/web3.min.js"></script>
+</head>
+<body>
+    <div class="my">
+        <h1>VERIT</h1>
+        <button id="accounts">Accounts</button>
+        <button id="verify" >Verify</button>
+        <button id="transactions">Transactions</button>
+    </div>
+    <script data-main="home" src="./libraries/require.js"></script>
+    <script src="/node_modules/@tarp/require/require.min.js"></script>
+    <script src = "temp.js"></script>
+</body>
+</html>

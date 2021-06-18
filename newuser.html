@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        div {
+            width: 300px;
+            height: 400px;
+            margin: 0;
+            padding: 0;
+
+            background-color: #fcee54;
+            color: aqua;
+        }
+
+        form {
+            align-items: center;
+            display: flex;
+            width: 100%;
+            height: 70%;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+            box-sizing: border-box;
+            background-color: #fcee54;
+            flex-wrap: wrap;
+            transition-duration: 0.7s;
+        }
+
+        button {
+            font-size: 200%;
+            background-color: #f5c2e0;
+            border-radius: 5px;
+            border: none;
+            text-align: center;
+            color: black;
+            font-family: monospace;
+            font-weight: bold;
+            transition-duration: 0.3s;
+            padding: 10px;
+            margin-top: 10%;
+        }
+
+        input {
+            font-size: 150%;
+            background-color: #c2e5f5;
+            border: none;
+            text-align: center;
+            color: black;
+            font-family: monospace;
+            font-weight: bold;
+            transition-duration: 0.3s;
+            margin-top: 10%;
+        }
+        h1 {
+            text-align: center;
+            color: chocolate;
+        }
+        p {
+            color: blueviolet;
+            text-align: center;
+        }
+        a {
+            color: crimson;
+        }
+    </style>
+</head>
+<body>
+    <div>
+    <h1>VERIT</h1>
+    <form>
+        <input type="password" name="password" id="password" placeholder="Password">
+        <input type="password" name="password" id="r-password" placeholder="Repeat Password">
+        <button type="submit">Sign In</button>
+    </form>
+    <p class="link">Go to login page<a href="login.html">Register Now</a></p>
+    <script src="./libraries/web3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js" integrity="sha256-/H4YS+7aYb9kJ5OKhFYPUjSJdrtV6AeyJOtTkw6X72o=" crossorigin="anonymous"></script>
+    <script src="./newuser.js"></script>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,1 @@
+Tarp.require({main: "./home.js"});
