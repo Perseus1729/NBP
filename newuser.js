@@ -11,12 +11,13 @@ document.querySelector('form').addEventListener('submit', event => {
         wallet.add(account);
         localStorage.setItem("Wallet",wallet);
         const address= account.address;
+        console.log(address);
         localStorage.setItem("Address",address);
         const passw=account.privateKey;
         const passphrase = pass;
         const encrypttext= CryptoJS.AES.encrypt(passw, passphrase).toString();
         localStorage.setItem("PrivKey",encrypttext);
-        window.location.replace('./login.html');
+//        window.location.replace('./login.html');
     }    
     else {
         document.querySelector('#password').placeholder = "Password not Matching.";
