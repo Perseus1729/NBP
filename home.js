@@ -1,123 +1,83 @@
-const button1 = document.getElementById('accounts');
-button1.addEventListener('click', () => {
-    window.location.replace('./account.html');
-});
-const button2 = document.getElementById('verify');
-button2.addEventListener('click', () => {
-    window.location.replace('./verit-verify.html');
-});
-const button3 = document.getElementById('transactions');
-button3.addEventListener('click', () => {
-    window.location.replace('./transactions.html');
-});
-
-/*
 const init = async () =>{
-    var web3 = window.web3;
-    define(function (require){
-        const Web3=require('web3');
-   })
-    const VeritIdentityTable = require('./ssi-verit/contracts/build/contracts/VeritIdentityTable.json');
-    const VeritTraceRecords = require('./ssi-verit/contracts/build/contracts/VeritTraceRecords.json');
-    web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:9545"));
-//    console.log(web3);
-    const id= await web3.eth.net.getId();
-//    console.log(id);
-    const deployedNetwork = VeritIdentityTable.networks[id];
-//    console.log(deployedNetwork);
-    const contract = new web3.eth.Contract(
+    var count=2;
+    const button1 = document.getElementById('transactions');
+    button1.addEventListener('click', () => {
+        window.location.replace('./transactions.html');
+    });
+
+    const button2 = document.getElementById('verify');
+    button2.addEventListener('click', () => {
+        window.location.replace('./verit-verify.html');
+    });
+
+//    const button3 = document.getElementById('record');
+
+    const VeritTraceRecords = require('./contracts/build/contracts/VeritTraceRecords.json');
+    const VeritIdentityTable = require('./contracts/build/contracts/VeritIdentityTable.json');
+    const maticweb3 = new Web3(new Web3.providers.HttpProvider('https://rpc-mumbai.maticvigil.com'));
+    console.log(maticweb3);
+
+    const contract = new maticweb3.eth.Contract(
         VeritIdentityTable.abi,
-        deployedNetwork.address
+        '0xD86A4b3021c4095397A9923e99F728943925CBe8'
     );
-//    console.log(contract);
-    const RecordsNetwork = VeritTraceRecords.networks[id];
-    const record_contract = new web3.eth.Contract(
+    console.log(contract);
+    const record_contract = new maticweb3.eth.Contract(
         VeritTraceRecords.abi,
-        RecordsNetwork.address
+        '0xA18d955d14B6F618156b358533D43C2E4e763789'
     );
-//    console.log(record_contract);
-    //contract  Initiating Adding User
 let owner = "0xA71A9AEe3b0d8027e7A654aA7ddf8a3D882C64F5";
 let owner_privKey = "0xbcfbe70f344d492288500c017f0530a8ecd78766ad71d099e37e30ebc45242e2";
-let address2 = "0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2";
-let address2_privKey = "7e5bfb82febc4c2c8529167104271ceec190eafdca277314912eaabdb67c6e5f";
-let signat = web3.eth.accounts.sign(web3.utils.keccak256(web3.utils.encodePacked("Verit Platform Registration\n", address2)), owner_privKey);
 
+let address2 = localStorage.getItem("Address");
+let ciphertext=localStorage.getItem("PrivKey");
+let passphrase=localStorage.getItem("password");
+let address2_privKey = CryptoJS.AES.decrypt(ciphertext, passphrase).toString(CryptoJS.enc.Utf8);
+const acc = maticweb3.eth.accounts.privateKeyToAccount(address2_privKey);
+//console.log(acc);
+maticweb3.eth.accounts.wallet.add(acc);
+
+document.getElementById("text_address").innerHTML=address2;
+
+var wallet=localStorage.getItem("Wallet");
+console.log(wallet);
+var account= maticweb3.eth.accounts.create();
+
+var encrypttext= CryptoJS.AES.encrypt(address2_privKey, passphrase).toString();
+localStorage.setItem("PrivKey",encrypttext);
+let signat = maticweb3.eth.accounts.sign(maticweb3.utils.keccak256(maticweb3.utils.encodePacked("Verit Platform Registration\n", address2)), owner_privKey);
+//console.log(signat);
 let sign  = signat.signature;
-
-let result = await contract.methods.registerAddress("User", [], sign).call();
+var result =  await contract.methods.registerAddress("User", [], sign).send({from: address2, gas:100000 });
 //console.log(result);
 //Adding Attestation
 let platformHandle = "atharv";
-signat = web3.eth.accounts.sign(web3.utils.keccak256(web3.utils.encodePacked("Verit Platform Attestation\n", platformHandle + "\n", address2)), owner_privKey);
+signat = maticweb3.eth.accounts.sign(maticweb3.utils.keccak256(maticweb3.utils.encodePacked("Verit Platform Attestation\n", platformHandle + "\n", address2)), owner_privKey);
 sign  = signat.signature;
 
-result = contract.methods.addAttestation(["Twitter", "twitter.com", sign, "atharv"]).call();
-
+result = await contract.methods.addAttestation(["Twitter", "twitter.com", sign, "atharv"]).send({from: address2, gas:800000 });
+//console.log(result);
 //Adding record
-let platformIdentifier = "Twitter";
-let inputMessage = '0xcedf45072aa31710694cc8d8ff2f1697900077d7ebba2622d600771f1104f101';
-let bgpage = chrome.extension.getBackgroundPage();
-let word = bgpage.word.trim();
-//console.log(word);
-let index = 1;
-let dataIndexHash = '0xb10e2d527612073b26eecdfd717e6a320cf44b4afac2b0732d9fcbe2b7fa0cf6';
-let timeStamp = '123456';
-let platformSignature = "12";
-let platformMetadata = "12";
-while((word!="Sign")&&(word!="")){
-//    inputMessage = web3.utils.keccak256(web3.utils.encodePacked(word));
-//    dataIndexHash = web3.utils.keccak256(web3.utils.encodePacked(index));
-    var new_signat = web3.eth.accounts.sign(web3.utils.keccak256(web3.utils.encodePacked("Verit Trace Records\n", platformIdentifier + "\n", inputMessage, dataIndexHash, timeStamp)), address2_privKey);
-    console.log(new_signat);
-    sign = new_signat.signature;
-    console.log(sign);
-    let record = [dataIndexHash,sign,platformHandle,inputMessage,timeStamp,platformIdentifier,platformSignature,platformMetadata];
-    console.log(record);
-    result = record_contract.methods.addRecord(record).call();
-    index = index + 1;
-    word="Sign";
-//    alert("Adding the The transaction");
-    localStorage.setItem("Localrecord", record_contract); 
-}
-    //Verify Data
-//    const verifyer = record_contract.verifyRecord(dataIndexHash, messageHash, platformIdentifier).call();
-const verifyer = record_contract.methods.verifyRecord(dataIndexHash, inputMessage, platformIdentifier).call();
-console.log(verifyer);
-if(verifyer){
-    alert("Correct Message");
-}
+$(function() {
+    $('#record').click(function(){
+        console.log("Clicked Button");
+        account= maticweb3.eth.accounts.create();
+      var newDiv = $('<div class="card"><div class="card-body"><p class="card-text">Account Number '+count+' </p><div class="card-header">Account address <p id="text"> '+account.address+'</p></div></div></div>');
+      $('#body').append(newDiv);
+      maticweb3.eth.accounts.wallet.add(account);
+      address2=account.address;
+      localStorage.setItem("Address",address2);
+      address2_privKey=account.privateKey;
+      encrypttext= CryptoJS.AES.encrypt(address2_privKey, passphrase).toString();
+      localStorage.setItem("PrivKey",encrypttext);
+      count++;
+    });
+});
+
+
+
+
 } 
+
+
 init();
-*/
-/*
-const CryptoJS = require("crypto-js");
-
-const encryptWithAES = (text) => {
-  const passphrase = "123";
-  return CryptoJS.AES.encrypt(text, passphrase).toString();
-};
-
-const decryptWithAES = (ciphertext) => {
-  const passphrase = "123";
-  const bytes = CryptoJS.AES.decrypt(ciphertext, passphrase);
-  const originalText = bytes.toString(CryptoJS.enc.Utf8);
-  return originalText;
-};
-*/
-/*
-//https://www.geeksforgeeks.org/how-to-access-variables-from-another-file-using-javascript/#:~:text=In%20JavaScript%2C%20variables%20can%20be,file%20in%20an%20HTML%20file.
-module.exports = {Student};
-const {Student} = require('./module1.js');
-//https://stackoverflow.com/questions/41255861/how-to-pass-variable-from-one-javascript-to-another-javascript-file
-var globalVariable={
-    x: 'sachin'
- };
- alert(globalVariable.x);
- //Get And Set Variable Values From One JavaScript File To ...https://www.c-sharpcorner.com › blogs › get-and-set-va...
- A.js var variableOne = "valueOne";  
-B.js var variableTwo; 
- localStorage.setItem("vOneLocalStorage", variableOne); 
- var vOneLS = localStorage.getItem("vOneLocalStorage ");  
- var variableTwo = vOneLS;  
-*/

@@ -1,27 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
-        <style>
-            div {
-            width: 300px;
-            height: 400px;
-            color: rgb(20, 14, 15);
-            background-color: yellow;
-            font-size: 17px;
-            text-align: center;
-        }
-        </style>
-        <script src="./transactions.js"></script>
-    </head>
-    <body>
-        <div>
-        <h1>
-            Transactions
-        </h1>
-        <p id="transactions"></p>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./nice-select.css">
+    <link rel="stylesheet" href="./verit-verify.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./transactions.css">
+    <script src="./libraries/web3.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@maticnetwork/maticjs@latest/dist/matic.js"></script>
+
+</head>
+
+<body>
+    <div id='navigation'>
+        <div id='logo'><img src='./img/popup-logo.svg'>VERIT</div>
+        <div id='more'><img src='./img/popup-more.svg'></div>
+    </div>
+    <div id='tabs'>
+        <div id='recording-type'>
+            <div id='tab-only' class='type '><img id="verify" src='./img/tab-only.svg'><p>Verify</p></div>
+            <div id='desktop' class='type type-active'><img id="transactions" src='./img/desktop-active.svg'><p>Transactions</p></div>
+            <div id='camera-only' class='type '><img id="home" src='./img/camera-only.svg'><p>Accounts</p></div>
         </div>
-    </body>
+    </div>
+    
+    <div id="closed">
+        <button id="btnAddtoList" style="margin-top: 10px" class="record">
+          Add Message
+        </button>
+    </div>
+    <script src="./libraries/jquery-3.5.1.min.js"></script>
+    <script src="./libraries/jquery.nice-select.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js" integrity="sha256-/H4YS+7aYb9kJ5OKhFYPUjSJdrtV6AeyJOtTkw6X72o=" crossorigin="anonymous"></script>
+    <script src="/node_modules/@tarp/require/require.min.js"></script>
+    <script src = "temp2.js"></script>
+</body>
 </html>
