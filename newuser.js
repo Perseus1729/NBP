@@ -2,7 +2,9 @@ const button = document.querySelector('button');
 document.querySelector('form').addEventListener('submit', event => {
     event.preventDefault();
     const pass = document.querySelector('#password').value;
+    console.log(pass);
     const rpass = document.querySelector('#r-password').value;
+    console.log(rpass);
     if (pass == rpass) {
         localStorage.setItem("password",pass);
         const maticweb3 = new Web3(new Web3.providers.HttpProvider("https://rpc-mumbai.maticvigil.com"));
