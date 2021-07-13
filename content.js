@@ -15,8 +15,10 @@ function wordSelected() {
     } 
   }
 }
+// this part is "twitter specific"- this used to catch the tweet which is written
 var x= document.getElementsByClassName("public-DraftStyleDefault-block public-DraftStyleDefault-ltr")[0].textContent;
 console.log(x);
+// this part is used to catch clicking action of "Tweet" button in twitter
 $('[data-testid="tweetButtonInline"]').click(function(){
   console.log("hello");
 //  var x= document.getElementsByClassName("public-DraftStyleDefault-block public-DraftStyleDefault-ltr")[0].textContent;
