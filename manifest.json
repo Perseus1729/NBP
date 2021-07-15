@@ -1,5 +1,5 @@
 {
-    "name": "Verit",
+    "name": "Verit.2.0",
     "description": "Message Authenticator",
     "version": "0.1.0",
     "manifest_version": 2,
@@ -16,7 +16,7 @@
     },
       "browser_action": {
     "default_popup": "login.html",
-    "default_title": "VERIT-NEW"
+    "default_title": "VERIT-NEW.2.0"
     },
     
     "permissions": [
