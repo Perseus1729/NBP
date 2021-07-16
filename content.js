@@ -15,6 +15,7 @@ function wordSelected() {
     } 
   }
 }
+/*
 // this part is "twitter specific"- this used to catch the tweet which is written
 var x= document.getElementsByClassName("public-DraftStyleDefault-block public-DraftStyleDefault-ltr")[0].textContent;
 console.log(x);
@@ -29,3 +30,4 @@ new_but.addEventListener('click', () => {
     var x= document.getElementsByClassName("public-DraftStyleDefault-block public-DraftStyleDefault-ltr")[0].textContent;
     console.log(x);
 });
+*/

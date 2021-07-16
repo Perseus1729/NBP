@@ -52,14 +52,14 @@ let inputMessage = '0xcedf45072aa31710694cc8d8ff2f1697900077d7ebba2622d600771f11
 let signat = maticweb3.eth.accounts.sign(maticweb3.utils.keccak256(maticweb3.utils.encodePacked("Verit Platform Registration\n", address2)), owner_privKey);
 //console.log(signat);
 let sign  = signat.signature;
-var result =  await contract.methods.registerAddress("User", [], sign).send({from: address2, gas:100000 });
+//var result =  await contract.methods.registerAddress("User", [], sign).send({from: address2, gas:100000 });
 //console.log(result);
 //Adding Attestation
 let platformHandle = "atharv";
  signat = maticweb3.eth.accounts.sign(maticweb3.utils.keccak256(maticweb3.utils.encodePacked("Verit Platform Attestation\n", platformHandle + "\n", address2)), owner_privKey);
  sign  = signat.signature;
 
-result = await contract.methods.addAttestation(["Twitter", "twitter.com", sign, "atharv"]).send({from: address2, gas:800000 });
+//result = await contract.methods.addAttestation(["Twitter", "twitter.com", sign, "atharv"]).send({from: address2, gas:800000 });
 
 let index = 1;
 let dataIndexHash = '0xb10e2d527612073b26eecdfd717e6a320cf44b4afac2b0732d9fcbe2b7fa0cf6';
@@ -89,9 +89,9 @@ dataIndexHash = maticweb3.utils.keccak256(maticweb3.utils.encodePacked(input_ind
 
         const init1 = async () =>{
             console.log("Hello");
-            const new_result = await record_contract.methods.addRecord(record).send({from: address2, gas:900000 });
+            const new_result = await record_contract.methods.addRecord(record).send({from: address2, gas:1000000 });
             console.log(new_result);
-            const output = await record_contract.methods.verifyRecord(dataIndexHash,inputMessage,platformIdentifier).call({from: address2, gas:900000 });
+            const output = await record_contract.methods.verifyRecord(dataIndexHash,inputMessage,platformIdentifier).call({from: address2, gas:1000000 });
         console.log(output);
             index = index + 1;
             word="Sign";

@@ -45,7 +45,7 @@ document.querySelector('form').addEventListener('submit', event => {
 //        console.log(output);
         var n_dataIndexHash = maticweb3.utils.keccak256(maticweb3.utils.encodePacked(index));
         var n_inputMessage = maticweb3.utils.keccak256(maticweb3.utils.encodePacked(message));
-        output = await record_contract.methods.verifyRecord(n_dataIndexHash,n_inputMessage,n_platformIdentifier).call({from: address2, gas:2000000 });
+        output = await record_contract.methods.verifyRecord(n_dataIndexHash,n_inputMessage,n_platformIdentifier).call({from: address2, gas:1000000 });
         console.log(output);
         if(output){
             alert('Correct Message');
