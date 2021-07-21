@@ -56,7 +56,7 @@ signat = maticweb3.eth.accounts.sign(maticweb3.utils.keccak256(maticweb3.utils.e
 sign  = signat.signature;
 
 result = await contract.methods.addAttestation(["Twitter", "twitter.com", sign, "atharv"]).send({from: address2, gas:800000 });
-//console.log(result);
+console.log(result);
 //Adding record
 $(function() {
     $('#record').click(function(){

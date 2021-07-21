@@ -91,8 +91,8 @@ dataIndexHash = maticweb3.utils.keccak256(maticweb3.utils.encodePacked(input_ind
             console.log("Hello");
             const new_result = await record_contract.methods.addRecord(record).send({from: address2, gas:1000000 });
             console.log(new_result);
-            const output = await record_contract.methods.verifyRecord(dataIndexHash,inputMessage,platformIdentifier).call({from: address2, gas:1000000 });
-        console.log(output);
+//            const output = await record_contract.methods.verifyRecord(dataIndexHash,inputMessage,platformIdentifier).call({from: address2, gas:1000000 });
+//        console.log(output);
             index = index + 1;
             word="Sign";
             console.log("Hi");
